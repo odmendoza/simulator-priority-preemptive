@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block nombre_titulo %}
+    Simulador por prioridad apropiativo
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-center">
+                    Procesos
+                </h2>
+                <form action="/priority-apropiative" , method="POST">
+                    <input type="hidden" value='{{ table }}' name="table">
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Proceso" name="proceso">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Tiempo de llegada" name="llegada">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Ráfaga de CPU" name="rafaga">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Prioridad" name="prioridad">
+                        </div>
+                        <br>
+                        <input class="btn btn-primary" type="submit" value="Añadir proceso">
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive-sm">
+                    {{ table | safe }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="/simulation" , method="POST">
+                    <input type="hidden" value='{{ table }}' name="table">
+                    <input type="hidden" value='{{ grantt }}' name="grantt">
+                    <input type="hidden" value='{{ tiempo }}' name="tiempo">
+                    <input type="hidden" value='{{ total_CPU_time }}' name="total_CPU_time">
+                    <input class="btn btn-primary" type="submit" value="Planificar por prioridad">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

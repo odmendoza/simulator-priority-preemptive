@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block nombre_titulo %}
+    Simulador por prioridad apropiativo
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-center">
+                    Procesos
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive-sm">
+                    {{ table | safe }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="/simulation" , method="POST">
+                    <input type="hidden" value='{{ table }}' name="table">
+                    <input type="hidden" value='{{ tiempo }}' name="tiempo">
+                    <input type="hidden" value='{{ grantt }}' name="grantt">
+                    <input type="hidden" value='{{ total_CPU_time }}' name="total_CPU_time">
+                    <input class="btn btn-primary" type="submit" value="Siguiente [ {{ tiempo }} ]">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h3 class="text-center">
+                    Diagrama de Grantt
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive-sm">
+                    {{ grantt | safe }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="/stadistics" , method="POST">
+                    <input type="hidden" value='{{ table }}' name="table">
+                    <input type="hidden" value='{{ grantt }}' name="grantt">
+                    <input class="btn btn-primary" type="submit" value="Ver estadísticas">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
