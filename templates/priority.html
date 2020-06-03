@@ -13,6 +13,7 @@
                 </h2>
                 <form action="/priority-apropiative" , method="POST">
                     <input type="hidden" value='{{ table }}' name="table">
+                    <input type="hidden" value='{{ dead }}' name="dead">
                     <div class="form-row">
                         <div class="col">
                             <input type="text" class="form-control" placeholder="Proceso" name="proceso">
@@ -57,6 +58,7 @@
                     <input type="hidden" value='{{ grantt }}' name="grantt">
                     <input type="hidden" value='{{ tiempo }}' name="tiempo">
                     <input type="hidden" value='{{ total_CPU_time }}' name="total_CPU_time">
+                    <input type="hidden" value='{{ dead }}' name="dead">
                     <input class="btn btn-primary" type="submit" value="Planificar por prioridad">
                 </form>
             </div>

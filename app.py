@@ -47,7 +47,7 @@ def process():
         grantt = grantt.replace('class="dataframe"', 'class="table"')
         grantt = grantt.replace('right;', 'center;')
 
-    return render_template('priority.html', table=table, tiempo=0, grantt=grantt, total_CPU_time=0)
+    return render_template('priority.html', table=table, tiempo=0, grantt=grantt, total_CPU_time=0, dead=0)
 
 
 @app.route('/simulation', methods=['GET', 'POST'])
@@ -57,6 +57,7 @@ def simulation():
         gr = request.form.get('grantt')
         tiempo = int(request.form.get('tiempo'))
         total_CPU_time = int(request.form.get('total_CPU_time'))
+        dead = int(request.form.get('dead'))
 
         dataframe = pd.read_html(tb, header=0)[0]
         grantt = pd.read_html(gr, header=0)[0]
@@ -72,6 +73,7 @@ def simulation():
             current_process = dataframe[dataframe['Tiempo de llegada'] <= tiempo-1]
             print(current_process)
             if (current_process.empty):
+                dead = 1
                 total_CPU_time += 1
                 if (grantt.tail(1)['Proceso'].values[0] == '[ /// ]'):
                     aux = grantt.tail(1)
@@ -135,7 +137,7 @@ def simulation():
     grantt = grantt.replace('class="dataframe"', 'class="table"')
     grantt = grantt.replace('right;', 'center;')
 
-    return render_template('simulation.html', table=table, tiempo=tiempo, grantt=grantt, total_CPU_time=total_CPU_time)
+    return render_template('simulation.html', table=table, tiempo=tiempo, grantt=grantt, total_CPU_time=total_CPU_time, dead=dead)
 
 
 @app.route('/stadistics', methods=['GET', 'POST'])
@@ -143,7 +145,8 @@ def stadistics():
     if request.method == 'POST':
         tb = request.form.get('table')
         gr = request.form.get('grantt')
-
+        dead = int(request.form.get('dead'))
+        print(dead)
         dataframe = pd.read_html(tb, header=0)[0]
         grantt = pd.read_html(gr, header=0)[0]
 
@@ -151,19 +154,58 @@ def stadistics():
         grantt = pd.DataFrame(grantt)
         print(grantt)
 
-        data = {
-            'Proceso': '...',
-            'Tiempo de espera': [0],
-            'Tiempo de retorno': [0]
+        grantt_process = grantt.tail(len(grantt)-(1+dead))
+        grantt_process = grantt_process['Proceso'].tolist()
+        begin = grantt.head(len(grantt)-1)
+        if dead == 1:
+            begin = begin.tail(len(begin) - 1)
+
+        begin = begin['Tiempo'].tolist()
+
+        arrival = []
+        for gp in grantt_process :
+            for index, row in dataframe.iterrows():
+                if row['Proceso'] == gp :
+                    arrival.append(row['Tiempo de llegada'])
+        wait_time = []
+        for b, a in zip(begin, arrival):
+            wait_time.append(b-a)
+        return_time= grantt.tail(len(grantt)-(1+dead))
+        return_time = return_time['Tiempo'].tolist()
+        d = {
+            'Proceso': grantt_process,
+            'Inicio': begin,
+            'Llegada' : arrival,
+            'Tiempo de espera' : wait_time,
+            'Tiempo de retorno' : return_time
         }
-        x = grantt.tail(len(grantt)-1)
-        y = grantt.head(len(grantt)-1)
-        d = {'Proceso':x['Proceso'].tolist(),'Inicio':y['Tiempo'].tolist()}
         df = pd.DataFrame(d)
         print(df)
-        stadistics = pd.DataFrame(data)
 
-        # Falta la parte de estadisticas
+        process = dataframe['Proceso'].tolist()
+        print(type(process))
+        r_time = []
+        w_time = []
+        for p in process:
+            current_process = df[df['Proceso'] == p]
+            print(current_process)
+            return_time = current_process['Tiempo de retorno'].values.max()
+            r_time.append(return_time)
+            wait_time = current_process['Tiempo de espera'].values.sum()
+            w_time.append(wait_time)
+
+        process.append('Promedio')
+        avg = round(sum(w_time) / len(w_time), 1)
+        w_time.append(avg)
+        avg = round(sum(r_time)/len(r_time), 1)
+        r_time.append(avg)
+
+        data = {
+            'Proceso': process,
+            'Tiempo de espera': w_time,
+            'Tiempo de retorno': r_time
+        }
+        stadistics = pd.DataFrame(data)
 
         table = pd.DataFrame.to_html(dataframe, index=False)
         table = table.replace('class="dataframe"', 'class="table"')
@@ -174,6 +216,7 @@ def stadistics():
         stadistics = pd.DataFrame.to_html(stadistics, index=False)
         stadistics = stadistics.replace('class="dataframe"', 'class="table"')
         stadistics = stadistics.replace('right;', 'center;')
+        stadistics = stadistics.replace('.0', '')
 
     return render_template('stadistics.html', table=table, grantt=grantt, stadistics=stadistics)
 
