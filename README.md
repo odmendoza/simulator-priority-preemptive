@@ -26,3 +26,6 @@ export FLASK_APP=app.py
 ```pythonexport FLASK_APP=app.py
 flask run 
 ```
+
+## Test the application
+<https://simulator-priority-preemptive.herokuapp.com/>
