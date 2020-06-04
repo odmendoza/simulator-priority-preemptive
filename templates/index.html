@@ -19,16 +19,16 @@
                     <input type="hidden" value='{{ table }}' name="table">
                     <div class="form-row">
                         <div class="col">
-                            <input type="text" class="form-control" placeholder="Proceso" name="proceso">
+                            <input type="text" class="form-control" placeholder="Proceso" name="proceso" required="true">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" placeholder="Tiempo de llegada" name="llegada">
+                            <input type="text" class="form-control" placeholder="Tiempo de llegada" name="llegada" required="true">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" placeholder="Ráfaga de CPU" name="rafaga">
+                            <input type="text" class="form-control" placeholder="Ráfaga de CPU" name="rafaga" required="true">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" placeholder="Prioridad" name="prioridad">
+                            <input type="text" class="form-control" placeholder="Prioridad" name="prioridad" required="true">
                         </div>
                         <br>
                         <input class="btn btn-primary" type="submit" value="Añadir proceso">

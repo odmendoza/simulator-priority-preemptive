@@ -25,7 +25,7 @@
                             <input type="text" class="form-control" placeholder="Ráfaga de CPU" name="rafaga">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" placeholder="Prioridad" name="prioridad">
+                                <input type="text" class="form-control" placeholder="Prioridad" name="prioridad">
                         </div>
                         <br>
                         <input class="btn btn-primary" type="submit" value="Añadir proceso">
@@ -59,7 +59,9 @@
                     <input type="hidden" value='{{ tiempo }}' name="tiempo">
                     <input type="hidden" value='{{ total_CPU_time }}' name="total_CPU_time">
                     <input type="hidden" value='{{ dead }}' name="dead">
-                    <input class="btn btn-primary" type="submit" value="Planificar por prioridad">
+                    <div class="text-center">
+                        <input class="btn btn-primary" type="submit" value="Planificar por prioridad">
+                    </div>
                 </form>
             </div>
         </div>
